@@ -1,11 +1,10 @@
 set(SOURCES
     main.cpp
-    #ChipControl/ChipControl.c
-    #Drivers/LTC2943.c
+    sensor_synthesizer/sensor_synthesizer.cpp
+    logger/logger.cpp
     # Add more source files here
 )
 
-
 add_executable(target ${SOURCES}) # specify the executable to be built and its source files
-#target_include_directories(target PUBLIC Drivers)
-#target_include_directories(target PUBLIC ChipControl)
+target_include_directories(target PUBLIC sensor_synthesizer)
+target_include_directories(target PUBLIC logger)
