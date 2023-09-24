@@ -8,3 +8,4 @@ set(SOURCES
 add_executable(target ${SOURCES}) # specify the executable to be built and its source files
 target_include_directories(target PUBLIC sensor_synthesizer)
 target_include_directories(target PUBLIC logger)
+target_include_directories(target PUBLIC networking)
