@@ -1,0 +1,10 @@
+/SpacecraftSensorSynthesizer/build/CMakeFiles/test.dir
+/SpacecraftSensorSynthesizer/build/CMakeFiles/edit_cache.dir
+/SpacecraftSensorSynthesizer/build/CMakeFiles/rebuild_cache.dir
+/SpacecraftSensorSynthesizer/build/src/CMakeFiles/target.dir
+/SpacecraftSensorSynthesizer/build/src/CMakeFiles/test.dir
+/SpacecraftSensorSynthesizer/build/src/CMakeFiles/edit_cache.dir
+/SpacecraftSensorSynthesizer/build/src/CMakeFiles/rebuild_cache.dir
+/SpacecraftSensorSynthesizer/build/test/CMakeFiles/test.dir
+/SpacecraftSensorSynthesizer/build/test/CMakeFiles/edit_cache.dir
+/SpacecraftSensorSynthesizer/build/test/CMakeFiles/rebuild_cache.dir
