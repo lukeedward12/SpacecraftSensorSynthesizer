@@ -56,11 +56,6 @@ template <uint16_t port> class server {
 			exit(EXIT_FAILURE);
 		}
 
-		if (listen(server_fd, 3) < 0) {
-			perror("listen");
-			exit(EXIT_FAILURE);
-		}
-
 		printf("\n Server Socket Setup!\n");
 	}
 
