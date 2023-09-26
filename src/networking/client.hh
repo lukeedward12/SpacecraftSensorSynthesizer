@@ -16,6 +16,7 @@ namespace networking {
  * @tparam port
  */
 template <uint16_t port> class client {
+      public:
 	/**
 	 * @brief Setup client Socket
 	 *
@@ -24,20 +25,21 @@ template <uint16_t port> class client {
 		printf("\n Setting up client socket!\n");
 		address.sin_family = AF_INET;
 		address.sin_port = htons(port);
+		int status = 0;
 
 		if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 			printf("\n Socket creation error \n");
 			return;
 		}
 
+		// Convert IPv4 and IPv6 addresses from text to binary
+		// form
 		if (inet_pton(AF_INET, "127.0.0.1", &address.sin_addr) <=
 		    0) {
 			printf(
 			    "\nInvalid address/ Address not supported \n");
 			return;
 		}
-
-		printf("\n client Socket Successfully created!\n");
 	}
 
 	/**
@@ -48,19 +50,13 @@ template <uint16_t port> class client {
 	void connect_to_server() {
 		printf("\n Attempting to connect to Server Socket...\n");
 		int status = 0;
-		for (uint8_t i = 0; i < 10; i++) {
-
-			if ((status = connect(client_fd,
-					      (struct sockaddr *)&address,
-					      sizeof(address))) < 0) {
-				std::this_thread::sleep_for(
-				    std::chrono::seconds(1));
-			} else {
-				printf("\nConnection Succesful with "
-				       "Server! \n");
-				break;
-			}
+		status = connect(client_fd, (struct sockaddr *)&address,
+				 sizeof(address));
+		if (status < 0) {
+			printf("\nConnection Failed \n");
+			return;
 		}
+		printf("\n Finished waiting for a server...!\n");
 	}
 
 	/**

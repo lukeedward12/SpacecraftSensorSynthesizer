@@ -25,8 +25,6 @@ template <uint16_t port> class server {
 	 */
 	void setup() {
 		printf("\n Setting up server socket!\n");
-		char buffer[1024] = {0};
-		char *hello = "Hello from server";
 
 		// Creating socket file descriptor
 		if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -60,32 +58,21 @@ template <uint16_t port> class server {
 	}
 
 	/**
-	 * @brief Wait for a client to connect to socket. Try for 10 times
-	 * over 10 seconds before erroring out.
+	 * @brief Wait for a client to connect to socket.
 	 *
 	 */
 	void wait_for_client() {
 		printf("\n Waiting for a client connection...!\n");
+
+		// TODO: Timeout and report an error
 		new_socket = accept(server_fd, (struct sockaddr *)&address,
 				    (socklen_t *)&addrlen);
 
-		for (uint8_t i = 0; i < 10; i++) {
-			// if ((new_socket = accept(
-			//	 server_fd, (struct sockaddr *)&address,
-			//	 (socklen_t *)&addrlen)) < 0) {
-			//
-			//	// printf("\nConnection Unsuccessful with "
-			//	//        "Client! Sleeping for 1 second
-			//	//        and " "trying " "again \n");
-			//	//
-			//	// std::this_thread::sleep_for(
-			//	//    std::chrono::seconds(1));
-			//} else {
-			//	// printf("\nConnection Successful with "
-			//	//        "Client! \n");
-			//	break;
-			//}
+		if (new_socket < 0) {
+			printf("\nConnection Failed \n");
+			return;
 		}
+
 		printf("\n Finished waiting for a client...!\n");
 		return;
 	}

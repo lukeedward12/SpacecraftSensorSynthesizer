@@ -16,6 +16,9 @@ int main() {
 	printf("\n SIM: Starting Logging Thread \n");
 	std::thread logger_thread(logger::logger_thread);
 
+	main_client.setup();
+	main_client.connect_to_server();
+
 	s3_thread.join();
 	logger_thread.join();
 	return 0;
