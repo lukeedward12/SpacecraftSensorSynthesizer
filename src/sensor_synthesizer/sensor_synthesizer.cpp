@@ -2,6 +2,7 @@
 #include "comm_types.hh"
 #include "server.hh"
 #include <chrono>
+#include <thread>
 
 namespace sensor_synthesizer {
 return_code init(networking::server<8080> &sensor_syn_server);
@@ -38,8 +39,8 @@ sensor_synthesizer::return_code sensor_synthesizer::core_loop(
     networking::server<8080> &sensor_syn_server) {
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-		// std::vector<uint8_t> read_data =
-		sensor_syn_server.read_data();
+		std::vector<uint8_t> read_data =
+		    sensor_syn_server.read_data();
 	}
 	return return_code::SUCCESS;
 }

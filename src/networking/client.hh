@@ -1,13 +1,8 @@
-#include "networking.hh"
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <thread>
-#include <vector>
+#ifndef CLIENT_HH
+#define CLIENT_HH
 
-// TODO: REMOVE
-#include "iostream"
-#include <string.h>
+#include "networking.hh"
+#include "socket.hh"
 
 namespace networking {
 
@@ -17,7 +12,7 @@ namespace networking {
  *
  * @tparam port
  */
-template <uint16_t port> class client {
+template <uint16_t port> class client : public network_socket {
       public:
 	/**
 	 * @brief Setup client Socket
@@ -29,7 +24,8 @@ template <uint16_t port> class client {
 		address.sin_port = htons(port);
 		int status = 0;
 
-		if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+		if ((pending_socket = socket(AF_INET, SOCK_STREAM, 0)) <
+		    0) {
 			printf("\n Socket creation error \n");
 			return return_codes::FAILURE;
 		}
@@ -54,43 +50,23 @@ template <uint16_t port> class client {
 	return_codes connect_to_server() {
 		printf("\n Attempting to connect to Server Socket...\n");
 		int status = 0;
-		status = connect(client_fd, (struct sockaddr *)&address,
-				 sizeof(address));
+		status =
+		    connect(pending_socket, (struct sockaddr *)&address,
+			    sizeof(address));
 		if (status < 0) {
 			printf("\nConnection Failed \n");
 			return return_codes::FAILURE;
 		}
 		printf("\n Finished waiting for a server...!\n");
-		return return_codes::SUCCESS;
-	}
 
-	/**
-	 * @brief Read data from socket.
-	 *
-	 */
-	return_codes read_data(const std::vector<uint8_t> &data) {
-
-		return return_codes::SUCCESS;
-	}
-
-	/**
-	 * @brief Write data to the socket
-	 *
-	 */
-	return_codes write_data(const std::vector<uint8_t> &data) {
-		printf("\n Sending data to the server...!\n");
-
-		ssize_t bytesSent =
-		    send(client_fd, data.data(), data.size(), 0);
-
-		printf("\n Sent %i bytes to the server...!\n", bytesSent);
+		connected_socket = pending_socket;
 		return return_codes::SUCCESS;
 	}
 
       protected:
       private:
-	int client_fd = 0;
-	struct sockaddr_in address {};
 };
 
 } // namespace networking
+
+#endif
