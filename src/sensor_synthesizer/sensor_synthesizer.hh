@@ -3,6 +3,8 @@
 
 namespace sensor_synthesizer {
 
+enum return_code { SUCCESS, FAILURE, TIMEOUT };
+
 /**
  * @brief THREAD: Sensor Synthesizer Thread - controls the reception of
  * sensor data from a socket, performs runtime analysis on sensor data at 1

@@ -1,3 +1,5 @@
+#include "networking.hh"
+#include "vector"
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -10,7 +12,7 @@
 namespace networking {
 
 /**
- * @brief
+ * @brief TCP Server Class
  *
  *
  * @tparam port
@@ -23,13 +25,14 @@ template <uint16_t port> class server {
 	 * @brief Setup Server Socket
 	 *
 	 */
-	void setup() {
+	return_codes setup() {
 		printf("\n Setting up server socket!\n");
 
 		// Creating socket file descriptor
 		if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 			perror("socket failed");
 			exit(EXIT_FAILURE);
+			return return_codes::FAILURE;
 		}
 
 		// Forcefully attaching socket to the port 8080
@@ -38,6 +41,7 @@ template <uint16_t port> class server {
 			       sizeof(opt))) {
 			perror("setsockopt");
 			exit(EXIT_FAILURE);
+			return return_codes::FAILURE;
 		}
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;
@@ -48,20 +52,23 @@ template <uint16_t port> class server {
 			 sizeof(address)) < 0) {
 			perror("bind failed");
 			exit(EXIT_FAILURE);
+			return return_codes::FAILURE;
 		}
 		if (listen(server_fd, 3) < 0) {
 			perror("listen");
 			exit(EXIT_FAILURE);
+			return return_codes::FAILURE;
 		}
 
 		printf("\n Server Socket Setup!\n");
+		return return_codes::SUCCESS;
 	}
 
 	/**
 	 * @brief Wait for a client to connect to socket.
 	 *
 	 */
-	void wait_for_client() {
+	return_codes wait_for_client() {
 		printf("\n Waiting for a client connection...!\n");
 
 		// TODO: Timeout and report an error
@@ -70,11 +77,11 @@ template <uint16_t port> class server {
 
 		if (new_socket < 0) {
 			printf("\nConnection Failed \n");
-			return;
+			return return_codes::FAILURE;
 		}
 
 		printf("\n Finished waiting for a client...!\n");
-		return;
+		return return_codes::SUCCESS;
 	}
 
 	/**
@@ -82,26 +89,46 @@ template <uint16_t port> class server {
 	 *
 	 */
 	void read_data() {
-		// char buffer[300] = {0};
-		// read(sock, buffer, 300);
-		// printf("Message received from server: %s\n", buffer);
+		size_t dataSize = 1024;
+		uint8_t read_buffer[dataSize] = {};
+		ssize_t bytesRead =
+		    read(new_socket, read_buffer, dataSize);
+
+		// Read the socket but be verbose if we error out
+		if (bytesRead == -1) {
+			std::cerr << "Error reading from socket: "
+				  << strerror(errno) << std::endl;
+		}
+
+		// if (bytesRead == 0) {
+		//
+		//	return return_vector;
+		//}
+
+		std::vector<uint8_t> return_vector(
+		    read_buffer, read_buffer + bytesRead);
+
+		printf("\n Read %i bytes from the client...!\n",
+		       bytesRead);
+
+		return;
 	}
 
 	/**
 	 * @brief Write data to the socket
 	 *
 	 */
-	void write_data() {
+	return_codes write_data() {
 		// const char *hello = "Hello from client";
 		// send(sock, hello, strlen(hello), 0);
 		// printf("Hello message sent\n");
+		return return_codes::SUCCESS;
 	}
 
       protected:
       private:
 	int server_fd = 0;
 	int new_socket = 0;
-	int valread = 0;
 	struct sockaddr_in address;
 	int addrlen = sizeof(address);
 	int opt = 1;
