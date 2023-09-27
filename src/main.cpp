@@ -22,7 +22,7 @@ int main() {
 	std::thread logger_thread(logger::logger_thread);
 
 	// Create client socket to populate S3 with Data
-	networking::client<8080> main_client;
+	networking::client<networking::S3_server_port> main_client;
 	networking::return_codes status;
 	status = main_client.setup();
 	status = main_client.connect_to_server();
